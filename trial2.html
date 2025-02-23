@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malls Valentine Card</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        
+        body {
+            background-color: #fef6eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Gaegu', cursive;
+            position: relative;
+            overflow: hidden;
+        }
+        .card-container {
+            position: relative;
+            width: 670px;
+            height: 470px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .envelope {
+            background-color: #e74b3d;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border-radius: 20px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 1s ease-in-out, opacity 0.5s ease-in-out;
+            transform-origin: top;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .stamp {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 110px;
+            height: 110px;
+        }
+        .hidden-card {
+            background-color: #ffb6c3;
+            width: 450px;
+            height: 600px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 30px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            padding: 20px;
+            overflow: hidden;
+        }
+        .image-border {
+            width: 60%;
+            aspect-ratio: 4 / 3;
+            border: solid 5px #fef6eb;
+            border-radius: 20px;
+            box-shadow: inset 0 0 0 5px #fef6eb, 2px 2px 0px 2px rgba(0, 0, 0, 0.5);
+            filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.5));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 10px;
+        }
+        .image-border img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        .hidden-card h1 {
+            color: #ec483a;
+            font-size: 32px;
+            margin-top: 20px;
+        }
+        .continue-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #ec483a;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .continue-button span {
+            margin-left: 3px;
+            font-size: 20px;
+            position: relative;
+            top: 3px;
+        }
+        .intro-text {
+            font-family: 'Lexend', sans-serif;
+            font-size: 80px;
+            font-weight: 700;
+            line-height: 1.2;
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            width: 60%;
+            text-align: left;
+            margin: 0;
+        }
+        .intro-text2 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 60px;
+            font-weight: 700;
+            line-height: 1.2;
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            width: 60%;
+            text-align: left;
+            margin: 0;
+        }
+        .intro-text span, .intro-text2 span {
+            display: block;
+            line-height: 1.2;
+        }
+        .intro-text span {
+            font-size: 72px;
+        }
+        .intro-text2 span {
+            font-size: 50px;
+        }
+
+        /* New styles for the buttons */
+        .button-container {
+
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .yes-button, .no-button {
+            padding: 10px 20px;
+            font-size: 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Gaegu', cursive;
+            transition: transform 0.2s ease-in-out;
+        }
+        .yes-button {
+            background-color: #e94a3a; /* Green */
+            color: white;
+        }
+        .no-button {
+            background-color: #fbfbfb; /* Red */
+            color: #e94a3a;
+        }
+        .no-button:hover {
+            animation: bounce 0.5s ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(100);
+            }
+            25% {
+                transform: translateX(-100px);
+            }
+            50% {
+                transform: translateX(100px);
+            }
+            75% {
+                transform: translateX(-100px);
+            }
+        }
+        /* ... (keep ALL your original styles) ... */
+
+        /* NEW: Fixes for LAST CARD ONLY */
+        #card8 .intro-text {
+            font-family: 'Lexend', sans-serif;
+            font-size: 80px;
+            font-weight: 700;
+            line-height: 1.2;
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            width: 60%;
+            text-align: left;
+            margin: 0; /* Center text */
+        }
+
+        #card8 .button-container {
+            margin-top: 400px;  /* Space between text and buttons */
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        /* New unclickable "no" button */
+  /* Add/update these styles */
+  .no-button {
+    transition: transform 0.3s ease;
+    pointer-events: auto; /* Allow hover */
+  }
+
+  .no-button:hover {
+    animation: bounce 0.5s infinite;
+    pointer-events: none; /* Disable clicks during animation */
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translate(30px, -20px); }
+    25% { transform: translate(-40px, 10px); }
+    50% { transform: translate(50px, -30px); }
+    75% { transform: translate(-50px, 20px); }
+  }
+
+  /* Container to catch hover events */
+  .no-button-container {
+    position: absolute;
+    padding: 100px; /* Larger hover area */
+    cursor: not-allowed;
+  }
+   /* Add confetti canvas positioning */
+   canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 999;
+    }
+
+    /* Update card9 styling */
+    #card9 {
+        display: none;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    #card9 h1 {
+        line-height: 1.5;
+    }
+    .left-corner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 10px; /* Optional: adds a little spacing from the corner */
+    z-index: 1000; /* Ensures it stays on top of other elements */
+}
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <audio controls id="music" class="left-corner" >
+        <source src="blue (Official Music Video).mp3" type="audio/mpeg">
+      </audio>
+
+    <div class="card-container" id="cardContainer" onclick="openEnvelope()">
+        <div class="envelope" id="envelope">
+            <h1 style="text-align: center; color: #fef6eb; font-size: 70px;">to malls</h1>
+            <h2 style="text-align: center; color: #fef6eb; font-size: 32px;">-from divi</h2>
+            <img src="stamp.png" alt="Stamp" class="stamp">
+        </div>
+        
+        <div class="hidden-card" id="card1">
+            <h1 class="intro-text">
+                <span>Since</span>
+                <span>we have</span>
+                <span>met...</span>
+            </h1>
+            <div class="continue-button" onclick="nextCard(1)">next<span>→</span></div>
+        </div>
+        <div class="hidden-card" id="card2">
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 60px; margin-bottom: 10px; color: #ec483a; text-align: center;">we almost</h2>
+            <div class="image-border" style="width: 54%;">
+                <img src="IMG_1.JPG" alt="Card Image 2">
+            </div>
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 60px; margin-top: 10px; color: #ec483a; text-align: center;">lost a car🚓</h2>
+            <div class="continue-button" onclick="nextCard(2)">continue<span>→</span></div>
+        </div>
+
+        <div class="hidden-card" id="card3">
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 60px; margin-bottom: 10px; color: #ec483a; text-align: center;">we almost</h2>
+            <div class="image-border" style="width: 54%;">
+                <img src="IMG_2.JPG" alt="Card Image 3">
+            </div>
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 50px; margin-top: 10px; color: #ec483a; text-align: center;">hit a rickshaw🛺</h2>
+            <div class="continue-button" onclick="nextCard(3)">still wanna continue?<span>→</span></div>
+        </div>
+
+        <div class="hidden-card" id="card4">
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 60px; margin-bottom: 10px; color: #ec483a; text-align: center;">we almost</h2>
+            <div class="image-border" style="width: 54%;">
+                <img src="IMG_3.JPG" alt="Card Image 4">
+            </div>
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 40px; margin-top: 10px; color: #ec483a; text-align: center;">burned down house🏚️</h2>
+            <div class="continue-button" onclick="nextCard(4)">you sure? (it's gettin risky)<span>→</span></div>
+        </div>
+
+        <div class="hidden-card" id="card5">
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 60px; margin-bottom: 10px; color: #ec483a; text-align: center;">we almost</h2>
+            <div class="image-border" style="width: 54%;">
+                <img src="IMG_4.JPG" alt="Card Image 5">
+            </div>
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 60px; margin-top: 10px; color: #ec483a; text-align: center;">had a kid🤰🏻🫃🏻</h2>
+            <div class="continue-button" onclick="nextCard(5)">hm see i told u, anw<span>→</span></div>
+        </div>
+
+        <div class="hidden-card" id="card6">
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 60px; margin-bottom: 10px; color: #ec483a; text-align: center;">we almost</h2>
+            <div class="image-border" style="width: 54%;">
+                <img src="IMG_5.JPG" alt="Card Image 6">
+            </div>
+            <h2 class="image-text" style="font-family: 'Lexend', sans-serif; font-size: 50px; margin-top: 10px; color: #ec483a; text-align: center; line-height: 1.2;"> 
+                lost a TT game🏓 
+                <br> 
+                <span style="font-family: 'Lexend', sans-serif; font-size: 16px; color: #ec483a; text-align: center; display: block; margin-top: 2px;"> 
+                    (cuz my loss your loss) 
+                </span> 
+            </h2>
+            <div class="continue-button" onclick="nextCard(6)">what can i say now <span>→</span></div>
+        </div>
+
+        <div class="hidden-card" id="card7">
+            <h1 class="intro-text2"> 
+                <span>After all this</span>
+                <span>we've been through together</span>
+                <span>I gotta ask</span>
+                <span>this one question!</span>
+            </h1>
+            <div class="continue-button" onclick="nextCard(7)">dekhle ha (at your own risk)<span>→</span></div>
+        </div>
+
+        <div class="hidden-card" id="card8">
+            <h1 class="intro-text">
+                <span>Will</span>
+                <span>you be my</span>
+                <span>Valentine?</span>
+            </h1>
+            <div class="button-container" style="margin-top: 300px;">
+                <button class="yes-button" onclick="handleYes()">YES!</button>
+                <button class="no-button" onmouseover="startEvade()" onclick="handleNo()">no</button>
+            </div>
+        </div>
+        <div class="hidden-card" id="card9" style="background-color: #e74b3d; font-family: 'Gaegu', cursive;">
+            <h1 style="text-align: center; color: #fef6eb; font-size: 50px; margin-top: 40px;">
+                2 tickets to the movie<br>
+                <span style="font-size: 60px;">KAL HO NAA HO</span><br>
+                this weekend
+            </h1>
+            <div style="color: #fef6eb; text-align: center; font-size: 30px; margin-top: 40px;">
+                <span style="display: block;">Sat Mauritius Time: 10:00 PM</span>
+                <span style="display: block; margin-top: 20px;">Sat New York Time: 1:00 PM</span>
+            </div>
+            <img src="cinema.png" alt="Stamp" class="stamp" style="position: absolute; top: 2px ;bottom: 30px; right: 20px; width: 100px;">
+        </div>
+    </div>
+    
+    <script>
+const audio = document.getElementById('music');
+    audio.addEventListener('play', () => {
+        audio.style.display = 'none'; // Hide the audio element when playing
+    });
+    
+function PlayMusic() {
+
+var play=document.getElementById("music");
+play.play();
+}
+
+$(document).ready(function(){
+setTimeout(PlayMusic,3000);
+})
+
+        
+        function openEnvelope() {
+            document.getElementById('envelope').style.display = 'none';
+            document.getElementById('card1').style.display = 'flex';
+        }
+        
+        function nextCard(current) {
+            document.getElementById(`card${current}`).style.display = 'none';
+            const next = current + 1;
+            if (document.getElementById(`card${next}`)) {
+                document.getElementById(`card${next}`).style.display = 'flex';
+            }
+        }
+
+        // ... (keep your original JavaScript) ...
+
+        // NEW: Add these functions for buttons
+        function handleYes() {
+        // Trigger confetti
+        var duration = 3000;
+        var end = Date.now() + duration;
+
+        (function frame() {
+            // Launch confetti from the left and right edges
+            confetti({
+                particleCount: 7,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#ff0000', '#ffffff', '#0000ff']
+            });
+            confetti({
+                particleCount: 7,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#ff0000', '#ffffff', '#0000ff']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
+
+        // Show ticket card
+        document.getElementById('card8').style.display = 'none';
+        document.getElementById('card9').style.display = 'flex';
+        clearInterval(evadeInterval);
+    }
+
+  
+    </script>
+</body>
+</html>

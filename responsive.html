@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malls Valentine Card</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@500&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        body {
+            background-color: #fef6eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Gaegu', cursive;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-container {
+            position: relative;
+            width: 90%; /* Adjusted for smaller screens */
+            max-width: 670px; /* Maximum width for larger screens */
+            height: auto; /* Adjusted for smaller screens */
+            min-height: 470px; /* Minimum height for larger screens */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px; /* Added margin for smaller screens */
+        }
+
+        .envelope {
+            background-color: #e74b3d;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border-radius: 20px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 1s ease-in-out, opacity 0.5s ease-in-out;
+            transform-origin: top;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .stamp {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 80px; /* Adjusted for smaller screens */
+            height: 80px; /* Adjusted for smaller screens */
+        }
+
+        .hidden-card {
+            background-color: #ffb6c3;
+            width: 90%; /* Adjusted for smaller screens */
+            max-width: 450px; /* Maximum width for larger screens */
+            height: auto; /* Adjusted for smaller screens */
+            min-height: 600px; /* Minimum height for larger screens */
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 30px;
+            box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .image-border {
+            width: 80%; /* Adjusted for smaller screens */
+            max-width: 60%; /* Maximum width for larger screens */
+            aspect-ratio: 4 / 3;
+            border: solid 5px #fef6eb;
+            border-radius: 20px;
+            box-shadow: inset 0 0 0 5px #fef6eb, 2px 2px 0px 2px rgba(0, 0, 0, 0.5);
+            filter: drop-shadow(2px 2px 0px rgba(0, 0, 0, 0.5));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 10px;
+        }
+
+        .image-border img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .hidden-card h1 {
+            color: #ec483a;
+            font-size: 24px; /* Adjusted for smaller screens */
+            margin-top: 20px;
+            text-align: center; /* Center text for smaller screens */
+        }
+
+        .continue-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 18px; /* Adjusted for smaller screens */
+            color: #ec483a;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .continue-button span {
+            margin-left: 3px;
+            font-size: 16px; /* Adjusted for smaller screens */
+            position: relative;
+            top: 3px;
+        }
+
+        .intro-text, .intro-text2 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 40px; /* Adjusted for smaller screens */
+            font-weight: 700;
+            line-height: 1.2;
+            position: absolute;
+            top: 20px; /* Adjusted for smaller screens */
+            left: 20px;
+            width: 80%; /* Adjusted for smaller screens */
+            text-align: left;
+            margin: 0;
+        }
+
+        .intro-text span, .intro-text2 span {
+            display: block;
+            line-height: 1.2;
+        }
+
+        .intro-text span {
+            font-size: 36px; /* Adjusted for smaller screens */
+        }
+
+        .intro-text2 span {
+            font-size: 30px; /* Adjusted for smaller screens */
+        }
+
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px; /* Adjusted for smaller screens */
+        }
+
+        .yes-button, .no-button {
+            padding: 10px 20px;
+            font-size: 18px; /* Adjusted for smaller screens */
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Gaegu', cursive;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .yes-button {
+            background-color: #e94a3a;
+            color: white;
+        }
+
+        .no-button {
+            background-color: #fbfbfb;
+            color: #e94a3a;
+        }
+
+        .no-button:hover {
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-10px);
+            }
+            50% {
+                transform: translateX(10px);
+            }
+            75% {
+                transform: translateX(-10px);
+            }
+        }
+
+        /* Responsive styles for tablets */
+        @media (min-width: 768px) {
+            .card-container {
+                width: 80%;
+                max-width: 670px;
+                height: 470px;
+            }
+
+            .hidden-card {
+                width: 450px;
+                height: 600px;
+            }
+
+            .intro-text, .intro-text2 {
+                font-size: 60px;
+                top: 30px;
+            }
+
+            .intro-text span {
+                font-size: 72px;
+            }
+
+            .intro-text2 span {
+                font-size: 50px;
+            }
+
+            .continue-button {
+                font-size: 24px;
+            }
+
+            .continue-button span {
+                font-size: 20px;
+            }
+
+            .yes-button, .no-button {
+                font-size: 24px;
+            }
+        }
+
+        /* Responsive styles for phones */
+        @media (max-width: 480px) {
+            .card-container {
+                width: 90%;
+                height: auto;
+                min-height: 300px;
+            }
+
+            .hidden-card {
+                width: 90%;
+                height: auto;
+                min-height: 400px;
+            }
+
+            .intro-text, .intro-text2 {
+                font-size: 30px;
+                top: 10px;
+            }
+
+            .intro-text span {
+                font-size: 36px;
+            }
+
+            .intro-text2 span {
+                font-size: 24px;
+            }
+
+            .continue-button {
+                font-size: 16px;
+            }
+
+            .continue-button span {
+                font-size: 14px;
+            }
+
+            .yes-button, .no-button {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio controls id="music" class="left-corner">
+        <source src="/Users/diveshharchandani/Desktop/Valantine card/blue (Official Music Video).mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card-container" id="cardContainer" onclick="openEnvelope()">
+        <div class="envelope" id="envelope">
+            <h1 style="text-align: center; color: #fef6eb; font-size: 40px;">to malls</h1>
+            <h2 style="text-align: center; color: #fef6eb; font-size: 24px;">-from divi</h2>
+            <img src="stamp.png" alt="Stamp" class="stamp">
+        </div>
+
+        <!-- Hidden cards go here -->
+        <!-- ... (keep your existing hidden cards) ... -->
+    </div>
+
+    <script>
+        const audio = document.getElementById('music');
+        audio.addEventListener('play', () => {
+            audio.style.display = 'none'; // Hide the audio element when playing
+        });
+
+        function PlayMusic() {
+            var play = document.getElementById("music");
+            play.play();
+        }
+
+        $(document).ready(function () {
+            setTimeout(PlayMusic, 3000);
+        });
+
+        function openEnvelope() {
+            document.getElementById('envelope').style.display = 'none';
+            document.getElementById('card1').style.display = 'flex';
+        }
+
+        function nextCard(current) {
+            document.getElementById(`card${current}`).style.display = 'none';
+            const next = current + 1;
+            if (document.getElementById(`card${next}`)) {
+                document.getElementById(`card${next}`).style.display = 'flex';
+            }
+        }
+
+        function handleYes() {
+            // Trigger confetti
+            var duration = 3000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 7,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff0000', '#ffffff', '#0000ff']
+                });
+                confetti({
+                    particleCount: 7,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff0000', '#ffffff', '#0000ff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Show ticket card
+            document.getElementById('card8').style.display = 'none';
+            document.getElementById('card9').style.display = 'flex';
+            clearInterval(evadeInterval);
+        }
+    </script>
+</body>
+</html>
